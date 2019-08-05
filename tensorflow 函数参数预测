@@ -51,3 +51,17 @@ with tf.compat.v1.Session() as sess:
     for _ in range(10):#下划线表示临时变量，只能用一次
         sess.run(update)
         print(sess.run(state))
+        
+        
+        
+        
+@#@#############################
+取回多个节点
+input1=tf.constant(3.0)
+input2=tf.constant(2.0)
+input3=tf.constant(5.0)
+intermd=tf.add(input2,input3)
+mul=tf.multiply(input1,intermd)#二者之间只是普通的乘法，非矩阵乘法，必须为相同的数据类型
+#tf.matmul为两个矩阵之间的乘法
+with tf.compat.v1.Session() as sess:
+    print(sess.run([mul,intermd]))
