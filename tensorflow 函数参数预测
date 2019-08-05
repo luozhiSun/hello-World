@@ -27,3 +27,27 @@ for step in range(201):
     sess.run(train)
     if step %20==0:
         print(step,sess.run(w),sess.run(b))
+
+
+
+
+
+
+##########################################
+基本操作，在训练中不断更新变量
+import tensorflow as tf
+#创建一个变量，初始化为标量0
+state=tf.Variable(0,name="counter")
+#创建一个变量，目的是使state+1
+one=tf.constant(1)
+new_value=tf.add(state,one)#state和one相加
+update=tf.assign(state,new_value)#将new_value的值赋值给state
+init_op=tf.initialize_all_variables()
+
+#在训练中重复更新变量
+with tf.compat.v1.Session() as sess:
+    sess.run(init_op)
+    print(sess.run(state))#打印state的初值
+    for _ in range(10):#下划线表示临时变量，只能用一次
+        sess.run(update)
+        print(sess.run(state))
