@@ -1,0 +1,42 @@
+
+import tensorflow as tf
+
+from tensorflow.examples.tutorials.mnist import input_data
+
+mnist=input_data.read_data_sets('MNIST_data',one_hot=True)#加载mnist数据
+
+sess=tf.InteractiveSession()
+
+x=tf.placeholder(tf.float32,[None,784])#None表示值大小不固定
+
+y_=tf.placeholder(float,[None,10])
+
+w=tf.Variable(tf.zeros([784,10]))#初始化零向量，784个特征，10个输出值
+
+b=tf.Variable(tf.zeros([10]))#变量能够在计算中使用修改，在机器学习的应用中，模型参数一般用Variable表示
+
+#变量需要通过session初始化后，才能使用
+
+sess.run(tf.initialize_all_variables())
+
+y=tf.nn.softmax(tf.matmul(x,w)+b)#定义的模型,预测的值
+
+cross_entropy=-tf.reduce_sum(y_*tf.log(y))#计算交叉熵（损失函数）
+
+train_step=tf.train.GradientDescentOptimizer(0.01).minimize(cross_entropy)#优化算法，让交叉熵下降，步长为0.01
+
+for i in range(1000):
+
+    batch=mnist.train.next_batch(50)
+
+    #训练模型
+
+    train_step.run(feed_dict={x:batch[0],y_:batch[1]})
+
+    #argmax能给出tensorflow对象在某一维上其数据最大值所在的索引值，最大值1所在的位置是类别标签
+    #tf.argmax(y,1)返回的是模型对于任一输入x预测到的标签值，tf.arfmax(y_,1)返回的是正确的标签
+    correct_prediction=tf.equal(tf.argmax(y,1),tf.argmax(y_,1))
+
+    accuracy=tf.reduce_mean(tf.cast(correct_prediction,tf.float32))
+    if i%50==0:
+        print(sess .run(accuracy,feed_dict={x:mnist.test.images,y_:mnist.test.labels}))#输出计算准确度
