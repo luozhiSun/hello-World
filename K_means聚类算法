@@ -1,0 +1,43 @@
+k_means算法在不带便签的多维数据集中寻找确定数量的簇，最优的聚类结果需要符合以下两个假设：
+（1）簇中心点是属于该簇的所有数据点坐标的算数平均值
+（2）一个簇的每个点到该簇中心点的聚类，比到其他簇中心点的距离短
+
+##导入数据包
+import matplotlib.pyplot as plt
+import seaborn as sns;sns.set()#绘图风格
+import numpy as np
+
+#k_means算法在不带标签的多维数据中寻找确定的数量的簇
+#最优的聚类结果：簇中心点属于该簇所有数据点坐标的算数平均值；一个簇的每个点到该中心点的距离比其他中心点的距离短
+
+#生成一个二维数据集，该数据集包含4个明显的簇
+
+from sklearn.datasets.samples_generator import make_blobs
+from sklearn.cluster import KMeans
+kmeans=KMeans(n_clusters=4)
+
+#n_samples 样本的个数，center 代表类别数，cluster_std表示每个类别的方差，n_features是每个样本的特征数
+x,y_true=make_blobs(n_samples=300,centers=4,cluster_std=0.60,random_state=0)
+#s代表样本的大小
+
+kmeans.fit(x)
+y_means=kmeans.predict(x)
+#带彩色标签的数据来展示聚类结果
+plt.scatter(x[:,0],x[:,1],c=y_means,s=50,cmap='viridis')
+centers=kmeans.cluster_centers_#簇中心点
+plt.scatter(centers[:,0],centers[:,1],c='black',s=300,alpha=0.5)
+plt.show()
+
+
+
+
+k_means算法：期望最大化
+
+expectation_maximization E_M,应用于数据科学的很多场景之中，包含以下步骤：
+   1.猜测一些簇中心点
+   2.重复直至收敛
+      a.重复步骤（E-step）：将点分配至离其最近的簇中心点
+      b.最大化步骤（M-step）：将簇中心点设置为所有点坐标的平均值
+      
+  期望步骤（E-step）不断更新每个点是属于哪一个簇的期望值，最大化步骤（M-step）计算关于簇中心点的拟合函数最大化对应坐标（argmax函数）、
+  在典型环境中，每一次重复E_step和M_step都将会得到更好的聚类效果
