@@ -1,0 +1,36 @@
+从https://classroom.udacity.com/courses/ud187/lessons/e0c70c77-5584-4f83-a47b-a67a6172ae75/concepts/ac6c6991-8096-4c7a-bad1-706f7e3d36f1
+中复习tensorflow的知识，keras这个API使数据预测仅需几行代码就可解决
+当增加神经网络隐藏层的个数时，会降低预测损失，并且降低迭代次数
+
+
+import numpy as np
+import tensorflow as tf
+import matplotlib.pyplot as plt
+
+#告诉tensorflow仅记录错误信息
+
+c_a=np.array([-40,-10,0,8,15,22,38],dtype=float)
+f_a=np.array([-40,14,32,46,59,72,100],dtype=float)
+for i,e in enumerate(c_a):
+    print("{} degrees c ={}".format(e,f_a[i]))#输出摄氏度对应的华氏温度
+
+#l0=tf.keras.layers.Dense(units=1,input_shape=[1])
+l1=tf.keras.layers.Dense(units=4,input_shape=[1])
+l2=tf.keras.layers.Dense(units=4)
+l3=tf.keras.layers.Dense(units=1)
+#model=tf.keras.Sequential([l0])
+model1=tf.keras.Sequential([l1,l2,l3])
+model1.compile(loss='mean_squared_error',optimizer=tf.keras.optimizers.Adam(0.1))
+history=model1.fit(c_a,f_a,epochs=500,verbose=False)
+#使用均方误差和adam优化器，0.1为学习效率，以何种训练速度来寻找最佳模型
+#model.compile(loss='mean_squared_error',optimizer=tf.keras.optimizers.Adam(0.1))
+#history=model.fit(c_a,f_a,epochs=500,verbose=False)#训练周期为500,模型一共将训练3500个样本
+print("finished training this model")
+plt.xlabel("F_number")#x轴表示训练周期
+plt.ylabel("Loss")#y轴表示损失值
+plt.plot(history.history['loss'])
+plt.show()
+print(model1.predict([100.0]))#输出模型预测值
+print("weights:{}".format(l1.get_weights()))
+print("l2 weights:{}".format(l2.get_weights()))
+print("l3 weights： {}".format(l3.get_weights()))
