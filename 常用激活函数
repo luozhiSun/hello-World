@@ -1,0 +1,25 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+x=np.arange(-5.0,5.0,0.1)
+
+def Relu(x):
+    return np.maximum(0,x)
+y=Relu(x)
+
+def Sigmoid(x):
+    return 1/(1+np.exp(-x))
+
+def step_function(x):
+    return np.array(x>0,dtype=np.int)
+
+y1=step_function(x)
+y2=Sigmoid(x)
+y3=Relu(x)
+
+plt.plot(x,y1,color='blue')
+plt.plot(x,y2,color="r")
+plt.plot(x,y3,color='green')
+
+plt.ylim(-0.1,5)
+plt.show()
